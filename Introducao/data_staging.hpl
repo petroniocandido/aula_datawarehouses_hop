@@ -24,11 +24,11 @@
   <order>
     <hop>
       <from>Text file input - Arquivos de Dados</from>
-      <to>Select values</to>
+      <to>Select Unidade_organizacional</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Select values</from>
+      <from>Select Unidade_organizacional</from>
       <to>Sort rows</to>
       <enabled>Y</enabled>
     </hop>
@@ -44,11 +44,11 @@
     </hop>
     <hop>
       <from>Text file input - Arquivos de Dados</from>
-      <to>Select values 2</to>
+      <to>Select Cargo_Petrobras</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Select values 2</from>
+      <from>Select Cargo_Petrobras</from>
       <to>Unique rows (HashSet)</to>
       <enabled>Y</enabled>
     </hop>
@@ -59,11 +59,11 @@
     </hop>
     <hop>
       <from>Text file input - Arquivos de Dados</from>
-      <to>Select values 3</to>
+      <to>Select Tipo/Subtipo</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Select values 3</from>
+      <from>Select Tipo/Subtipo</from>
       <to>Unique rows (HashSet) 2</to>
       <enabled>Y</enabled>
     </hop>
@@ -74,47 +74,125 @@
     </hop>
     <hop>
       <from>Text file input - Arquivos de Dados</from>
-      <to>Select values 4</to>
+      <to>Dt.Inicio_Viagem</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Text file input - Arquivos de Dados</from>
-      <to>Select values 4 2</to>
+      <to>Select Dt.Fim_Viagem</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Select values 4</from>
+      <from>Unique Data</from>
+      <to>dsTempo</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Text file input - Arquivos de Dados</from>
+      <to>Origem_do_Voo</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Text file input - Arquivos de Dados</from>
+      <to>Destino_do_Voo</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Origem_do_Voo</from>
+      <to>Sort rows 3</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Destino_do_Voo</from>
+      <to>Sort rows 3 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Sort rows 3</from>
+      <to>Append streams 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Sort rows 3 2</from>
+      <to>Append streams 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Dt.Inicio_Viagem</from>
+      <to>Sort Data 1</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select Dt.Fim_Viagem</from>
+      <to>Sort Data 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Sort Data 1</from>
       <to>Append streams</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Select values 4 2</from>
+      <from>Sort Data 2</from>
       <to>Append streams</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Append streams</from>
-      <to>Sort rows 2</to>
+      <to>Unique Data</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Sort rows 2</from>
-      <to>Unique rows 2</to>
+      <from>Append streams 2</from>
+      <to>Unique Local</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Unique rows 2</from>
-      <to>Split fields</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Split fields</from>
-      <to>Text file output</to>
+      <from>Unique Local</from>
+      <to>dsLocais</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <transform>
-    <name>Select values</name>
+    <name>Append streams</name>
+    <type>Append</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <head_name>Sort Data 1</head_name>
+    <tail_name>Sort Data 2</tail_name>
+    <attributes/>
+    <GUI>
+      <xloc>640</xloc>
+      <yloc>400</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Append streams 2</name>
+    <type>Append</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <head_name>Sort rows 3</head_name>
+    <tail_name>Sort rows 3 2</tail_name>
+    <attributes/>
+    <GUI>
+      <xloc>672</xloc>
+      <yloc>592</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Destino_do_Voo</name>
     <type>SelectValues</type>
     <description/>
     <distribute>Y</distribute>
@@ -126,18 +204,99 @@
     </partitioning>
     <fields>
       <field>
-        <name>Unidade_organizacional</name>
+        <name>Destino_do_Voo</name>
+        <rename>Local</rename>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
     <attributes/>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>48</yloc>
+      <xloc>368</xloc>
+      <yloc>640</yloc>
     </GUI>
   </transform>
   <transform>
-    <name>Select values 2</name>
+    <name>Dt.Inicio_Viagem</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>Dt.Inicio_Viagem</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+      <meta>
+        <name>Dt.Inicio_Viagem</name>
+        <rename>Data</rename>
+        <type>String</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+    </fields>
+    <attributes/>
+    <GUI>
+      <xloc>368</xloc>
+      <yloc>368</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Origem_do_Voo</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>Origem_do_Voo</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+      <meta>
+        <name>Origem_do_Voo</name>
+        <rename>Local</rename>
+        <type>String</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+    </fields>
+    <attributes/>
+    <GUI>
+      <xloc>368</xloc>
+      <yloc>560</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Select Cargo_Petrobras</name>
     <type>SelectValues</type>
     <description/>
     <distribute>Y</distribute>
@@ -155,8 +314,165 @@
     </fields>
     <attributes/>
     <GUI>
-      <xloc>352</xloc>
+      <xloc>368</xloc>
       <yloc>176</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Select Dt.Fim_Viagem</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>Dt.Fim_Viagem</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+      <meta>
+        <name>Dt.Fim_Viagem</name>
+        <rename>Data</rename>
+        <type>String</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+    </fields>
+    <attributes/>
+    <GUI>
+      <xloc>368</xloc>
+      <yloc>464</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Select Tipo/Subtipo</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>Tipo_de_Viajante</name>
+      </field>
+      <field>
+        <name>Subtipo_de_Viajante</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <GUI>
+      <xloc>368</xloc>
+      <yloc>272</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Select Unidade_organizacional</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>Unidade_organizacional</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <GUI>
+      <xloc>368</xloc>
+      <yloc>64</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Sort Data 1</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>${java.io.tmpdir}</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>Data</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <GUI>
+      <xloc>528</xloc>
+      <yloc>368</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Sort Data 2</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>${java.io.tmpdir}</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>Data</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <GUI>
+      <xloc>528</xloc>
+      <yloc>464</yloc>
     </GUI>
   </transform>
   <transform>
@@ -189,8 +505,76 @@
     </fields>
     <attributes/>
     <GUI>
-      <xloc>496</xloc>
-      <yloc>48</yloc>
+      <xloc>528</xloc>
+      <yloc>64</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Sort rows 3</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>${java.io.tmpdir}</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>Local</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <GUI>
+      <xloc>528</xloc>
+      <yloc>560</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Sort rows 3 2</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>${java.io.tmpdir}</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>Local</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <GUI>
+      <xloc>528</xloc>
+      <yloc>640</yloc>
     </GUI>
   </transform>
   <transform>
@@ -410,7 +794,7 @@
       </field>
       <field>
         <name>Dt.Inicio_Viagem</name>
-        <type>Date</type>
+        <type>String</type>
         <format>dd.MM.YYYY</format>
         <currency>$</currency>
         <decimal>,</decimal>
@@ -425,7 +809,7 @@
       </field>
       <field>
         <name>Dt.Fim_Viagem</name>
-        <type>Date</type>
+        <type>String</type>
         <format>dd.MM.YYYY</format>
         <currency>$</currency>
         <decimal>,</decimal>
@@ -571,8 +955,58 @@
     <sizeFieldName/>
     <attributes/>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>144</yloc>
+      <xloc>112</xloc>
+      <yloc>336</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Unique Data</name>
+    <type>Unique</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <case_insensitive>N</case_insensitive>
+        <name>Data</name>
+      </field>
+    </fields>
+    <count_rows>N</count_rows>
+    <reject_duplicate_row>N</reject_duplicate_row>
+    <attributes/>
+    <GUI>
+      <xloc>768</xloc>
+      <yloc>400</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Unique Local</name>
+    <type>Unique</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <case_insensitive>N</case_insensitive>
+        <name>Local</name>
+      </field>
+    </fields>
+    <count_rows>N</count_rows>
+    <reject_duplicate_row>N</reject_duplicate_row>
+    <attributes/>
+    <GUI>
+      <xloc>816</xloc>
+      <yloc>592</yloc>
     </GUI>
   </transform>
   <transform>
@@ -597,8 +1031,8 @@
     <reject_duplicate_row>N</reject_duplicate_row>
     <attributes/>
     <GUI>
-      <xloc>608</xloc>
-      <yloc>48</yloc>
+      <xloc>624</xloc>
+      <yloc>64</yloc>
     </GUI>
   </transform>
   <transform>
@@ -624,6 +1058,34 @@
     <GUI>
       <xloc>528</xloc>
       <yloc>176</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Unique rows (HashSet) 2</name>
+    <type>UniqueRowsByHashSet</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <store_values>N</store_values>
+    <reject_duplicate_row>N</reject_duplicate_row>
+    <error_description/>
+    <fields>
+      <field>
+        <name>Tipo_de_Viajante</name>
+      </field>
+      <field>
+        <name>Subtipo_de_Viajante</name>
+      </field>
+    </fields>
+    <attributes/>
+    <GUI>
+      <xloc>528</xloc>
+      <yloc>272</yloc>
     </GUI>
   </transform>
   <transform>
@@ -688,7 +1150,7 @@
     </GUI>
   </transform>
   <transform>
-    <name>dsUnidades</name>
+    <name>dsLocais</name>
     <type>TextFileOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -706,13 +1168,13 @@
     <footer>N</footer>
     <format>DOS</format>
     <compression>None</compression>
-    <encoding>windows-1252</encoding>
+    <encoding>UTF-8</encoding>
     <endedLine/>
     <fileNameInField>N</fileNameInField>
     <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
-      <name>${PROJECT_HOME}/dsUnidades</name>
+      <name>${PROJECT_HOME}/dsLocais</name>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>N</do_not_open_new_file_init>
       <extention>csv</extention>
@@ -730,27 +1192,27 @@
     </file>
     <fields>
       <field>
-        <name>Unidade_organizacional</name>
+        <name>Local</name>
         <type>String</type>
         <format/>
         <currency/>
         <decimal/>
         <group/>
         <nullif/>
-        <trim_type>none</trim_type>
+        <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
       </field>
     </fields>
     <attributes/>
     <GUI>
-      <xloc>736</xloc>
-      <yloc>48</yloc>
+      <xloc>944</xloc>
+      <yloc>592</yloc>
     </GUI>
   </transform>
   <transform>
-    <name>Select values 3</name>
-    <type>SelectValues</type>
+    <name>dsTempo</name>
+    <type>TextFileOutput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -759,49 +1221,54 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
+    <separator>;</separator>
+    <enclosure>"</enclosure>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>Y</header>
+    <footer>N</footer>
+    <format>DOS</format>
+    <compression>None</compression>
+    <encoding>UTF-8</encoding>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>${PROJECT_HOME}/dsTempo</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention>csv</extention>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery/>
+    </file>
     <fields>
       <field>
-        <name>Tipo_de_Viajante</name>
-        <rename/>
+        <name>Data</name>
+        <type>String</type>
+        <format>dd.MM.YYYY</format>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>2</precision>
       </field>
-      <field>
-        <name>Subtipo_de_Viajante</name>
-        <rename/>
-      </field>
-      <select_unspecified>N</select_unspecified>
     </fields>
     <attributes/>
     <GUI>
-      <xloc>368</xloc>
-      <yloc>304</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>Unique rows (HashSet) 2</name>
-    <type>UniqueRowsByHashSet</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <store_values>N</store_values>
-    <reject_duplicate_row>N</reject_duplicate_row>
-    <error_description/>
-    <fields>
-      <field>
-        <name>Tipo_de_Viajante</name>
-      </field>
-      <field>
-        <name>Subtipo_de_Viajante</name>
-      </field>
-    </fields>
-    <attributes/>
-    <GUI>
-      <xloc>528</xloc>
-      <yloc>304</yloc>
+      <xloc>944</xloc>
+      <yloc>400</yloc>
     </GUI>
   </transform>
   <transform>
@@ -873,242 +1340,12 @@
     </fields>
     <attributes/>
     <GUI>
-      <xloc>704</xloc>
-      <yloc>304</yloc>
+      <xloc>752</xloc>
+      <yloc>272</yloc>
     </GUI>
   </transform>
   <transform>
-    <name>Select values 4</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>Dt.Inicio_Viagem</name>
-        <rename/>
-      </field>
-      <select_unspecified>N</select_unspecified>
-      <meta>
-        <name>Dt.Inicio_Viagem</name>
-        <rename>Data</rename>
-        <type>None</type>
-        <length>-2</length>
-        <precision>-2</precision>
-        <conversion_mask/>
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale/>
-        <date_format_timezone/>
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding/>
-        <decimal_symbol/>
-        <grouping_symbol/>
-        <currency_symbol/>
-        <storage_type/>
-      </meta>
-    </fields>
-    <attributes/>
-    <GUI>
-      <xloc>368</xloc>
-      <yloc>384</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>Append streams</name>
-    <type>Append</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <head_name>Select values 4</head_name>
-    <tail_name>Select values 4 2</tail_name>
-    <attributes/>
-    <GUI>
-      <xloc>576</xloc>
-      <yloc>400</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>Select values 4 2</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>Dt.Fim_Viagem</name>
-        <rename/>
-      </field>
-      <select_unspecified>N</select_unspecified>
-      <meta>
-        <name>Dt.Fim_Viagem</name>
-        <rename>Data</rename>
-        <type>None</type>
-        <length>-2</length>
-        <precision>-2</precision>
-        <conversion_mask/>
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale/>
-        <date_format_timezone/>
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding/>
-        <decimal_symbol/>
-        <grouping_symbol/>
-        <currency_symbol/>
-        <storage_type/>
-      </meta>
-    </fields>
-    <attributes/>
-    <GUI>
-      <xloc>368</xloc>
-      <yloc>464</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>Sort rows 2</name>
-    <type>SortRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <directory>${java.io.tmpdir}</directory>
-    <prefix>out</prefix>
-    <sort_size>1000000</sort_size>
-    <free_memory/>
-    <compress>N</compress>
-    <compress_variable/>
-    <unique_rows>N</unique_rows>
-    <fields>
-      <field>
-        <name>Data</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-    </fields>
-    <attributes/>
-    <GUI>
-      <xloc>720</xloc>
-      <yloc>400</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>Unique rows 2</name>
-    <type>Unique</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <case_insensitive>N</case_insensitive>
-        <name>Data</name>
-      </field>
-    </fields>
-    <count_field/>
-    <count_rows>N</count_rows>
-    <error_description/>
-    <reject_duplicate_row>N</reject_duplicate_row>
-    <attributes/>
-    <GUI>
-      <xloc>832</xloc>
-      <yloc>400</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>Split fields</name>
-    <type>FieldSplitter</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <splitfield>Data</splitfield>
-    <delimiter>.</delimiter>
-    <enclosure/>
-    <escape_string/>
-    <fields>
-      <field>
-        <name>Dia</name>
-        <id/>
-        <idrem>N</idrem>
-        <type>Integer</type>
-        <format/>
-        <group/>
-        <decimal/>
-        <currency/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <nullif/>
-        <ifnull/>
-        <trimtype>none</trimtype>
-      </field>
-      <field>
-        <name>Mes</name>
-        <id/>
-        <idrem>N</idrem>
-        <type>Integer</type>
-        <format/>
-        <group/>
-        <decimal/>
-        <currency/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <nullif/>
-        <ifnull/>
-        <trimtype>none</trimtype>
-      </field>
-      <field>
-        <name>Ano</name>
-        <id/>
-        <idrem>N</idrem>
-        <type>Integer</type>
-        <format/>
-        <group/>
-        <decimal/>
-        <currency/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <nullif/>
-        <ifnull/>
-        <trimtype>none</trimtype>
-      </field>
-    </fields>
-    <attributes/>
-    <GUI>
-      <xloc>944</xloc>
-      <yloc>400</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>Text file output</name>
+    <name>dsUnidades</name>
     <type>TextFileOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -1126,13 +1363,13 @@
     <footer>N</footer>
     <format>DOS</format>
     <compression>None</compression>
-    <encoding/>
+    <encoding>windows-1252</encoding>
     <endedLine/>
     <fileNameInField>N</fileNameInField>
     <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
-      <name>${PROJECT_HOME}/dsTempo</name>
+      <name>${PROJECT_HOME}/dsUnidades</name>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>N</do_not_open_new_file_init>
       <extention>csv</extention>
@@ -1150,8 +1387,8 @@
     </file>
     <fields>
       <field>
-        <name>Dia</name>
-        <type>Integer</type>
+        <name>Unidade_organizacional</name>
+        <type>String</type>
         <format/>
         <currency/>
         <decimal/>
@@ -1159,37 +1396,13 @@
         <nullif/>
         <trim_type>none</trim_type>
         <length>-1</length>
-        <precision>0</precision>
-      </field>
-      <field>
-        <name>Mes</name>
-        <type>Integer</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>-1</length>
-        <precision>0</precision>
-      </field>
-      <field>
-        <name>Ano</name>
-        <type>Integer</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>-1</length>
-        <precision>0</precision>
+        <precision>-1</precision>
       </field>
     </fields>
     <attributes/>
     <GUI>
-      <xloc>944</xloc>
-      <yloc>496</yloc>
+      <xloc>752</xloc>
+      <yloc>64</yloc>
     </GUI>
   </transform>
   <transform_error_handling>
