@@ -16,8 +16,6 @@
     <created_date>2023/03/10 08:34:09.635</created_date>
     <modified_user>-</modified_user>
     <modified_date>2023/03/10 08:34:09.635</modified_date>
-    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
-    <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
@@ -63,27 +61,47 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Select values 3 3</from>
-      <to>dimLocais</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>dsLocais</from>
-      <to>Select values 3 3</to>
+      <to>Select locais</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Select values 3 2</from>
-      <to>Merge join</to>
+      <to>Merge Tempo</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Split fields</from>
-      <to>Merge join</to>
+      <to>Merge Tempo</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Merge join</from>
+      <from>Select locais</from>
+      <to>HTTP client</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>HTTP client</from>
+      <to>JSON input</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>JSON input</from>
+      <to>JavaScript</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>JavaScript</from>
+      <to>dimLocais</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Merge Tempo</from>
+      <to>Dia da Semana</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Dia da Semana</from>
       <to>Select values 4</to>
       <enabled>Y</enabled>
     </hop>
@@ -93,6 +111,290 @@
       <enabled>Y</enabled>
     </hop>
   </order>
+  <transform>
+    <name>Dia da Semana</name>
+    <type>ScriptValueMod</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>//Script here
+
+d = new Date(Ano, Mes, Dia)
+dia_semana = d.getDay()</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>dia_semana</name>
+        <rename>DiaSemana</rename>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
+    <attributes/>
+    <GUI>
+      <xloc>672</xloc>
+      <yloc>576</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>HTTP client</name>
+    <type>Http</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <url>https://nominatim.openstreetmap.org/search/?format=json&amp;limit=1</url>
+    <urlInField>N</urlInField>
+    <ignoreSsl>N</ignoreSsl>
+    <urlField/>
+    <encoding>UTF-8</encoding>
+    <httpLogin/>
+    <httpPassword>Encrypted </httpPassword>
+    <proxyHost/>
+    <proxyPort/>
+    <socketTimeout>10000</socketTimeout>
+    <connectionTimeout>10000</connectionTimeout>
+    <closeIdleConnectionsTime>-1</closeIdleConnectionsTime>
+    <lookup>
+      <arg>
+        <name>Local</name>
+        <parameter>q</parameter>
+      </arg>
+    </lookup>
+    <result>
+      <name>result</name>
+      <code/>
+      <response_time/>
+      <response_header/>
+    </result>
+    <attributes/>
+    <GUI>
+      <xloc>384</xloc>
+      <yloc>304</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>JSON input</name>
+    <type>JsonInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <include>N</include>
+    <include_field/>
+    <rownum>N</rownum>
+    <addresultfile>N</addresultfile>
+    <readurl>N</readurl>
+    <removeSourceField>N</removeSourceField>
+    <IsIgnoreEmptyFile>N</IsIgnoreEmptyFile>
+    <doNotFailIfNoFile>Y</doNotFailIfNoFile>
+    <ignoreMissingPath>Y</ignoreMissingPath>
+    <defaultPathLeafToNull>Y</defaultPathLeafToNull>
+    <rownum_field/>
+    <file>
+      <name/>
+      <filemask/>
+      <exclude_filemask/>
+      <file_required>N</file_required>
+      <include_subfolders>N</include_subfolders>
+    </file>
+    <fields>
+      <field>
+        <name>lat</name>
+        <path>[0].lat</path>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
+      </field>
+      <field>
+        <name>lon</name>
+        <path>[0].lon</path>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
+      </field>
+      <field>
+        <name>desc</name>
+        <path>[0].display_name</path>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
+      </field>
+    </fields>
+    <limit>0</limit>
+    <IsInFields>Y</IsInFields>
+    <IsAFile>N</IsAFile>
+    <valueField>result</valueField>
+    <shortFileFieldName/>
+    <pathFieldName/>
+    <hiddenFieldName/>
+    <lastModificationTimeFieldName/>
+    <uriNameFieldName/>
+    <rootUriNameFieldName/>
+    <extensionFieldName/>
+    <sizeFieldName/>
+    <attributes/>
+    <GUI>
+      <xloc>544</xloc>
+      <yloc>304</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>JavaScript</name>
+    <type>ScriptValueMod</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>//Script here
+pais = desc != null ? desc.split(",").slice(-1) : ""
+</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>pais</name>
+        <rename>pais</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
+    <attributes/>
+    <GUI>
+      <xloc>704</xloc>
+      <yloc>304</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Merge Tempo</name>
+    <type>MergeJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <join_type>INNER</join_type>
+    <keys_1>
+      <key>pkTempo</key>
+    </keys_1>
+    <keys_2>
+      <key>pkTempo</key>
+    </keys_2>
+    <transform1>Select values 3 2</transform1>
+    <transform2>Split fields</transform2>
+    <attributes/>
+    <GUI>
+      <xloc>512</xloc>
+      <yloc>576</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Select locais</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+      <meta>
+        <name>pkLocal</name>
+        <rename>pkLocal</rename>
+        <type>None</type>
+        <length>10</length>
+        <precision>0</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>Local</name>
+        <rename>Local</rename>
+        <type>None</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+    </fields>
+    <attributes/>
+    <GUI>
+      <xloc>240</xloc>
+      <yloc>304</yloc>
+    </GUI>
+  </transform>
   <transform>
     <name>Select values</name>
     <type>SelectValues</type>
@@ -323,11 +625,11 @@
     <attributes/>
     <GUI>
       <xloc>336</xloc>
-      <yloc>256</yloc>
+      <yloc>448</yloc>
     </GUI>
   </transform>
   <transform>
-    <name>Select values 3 3</name>
+    <name>Select values 4</name>
     <type>SelectValues</type>
     <description/>
     <distribute>Y</distribute>
@@ -338,28 +640,35 @@
       <schema_name/>
     </partitioning>
     <fields>
+      <field>
+        <name>Data</name>
+        <rename/>
+      </field>
+      <field>
+        <name>pkTempo</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Dia</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Mes</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Ano</name>
+        <rename/>
+      </field>
+      <field>
+        <name>DiaSemana</name>
+        <rename/>
+      </field>
       <select_unspecified>N</select_unspecified>
       <meta>
-        <name>pkLocal</name>
-        <rename>pkLocal</rename>
-        <type>None</type>
-        <length>10</length>
-        <precision>0</precision>
-        <conversion_mask/>
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale/>
-        <date_format_timezone/>
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding/>
-        <decimal_symbol/>
-        <grouping_symbol/>
-        <currency_symbol/>
-        <storage_type/>
-      </meta>
-      <meta>
-        <name>Local</name>
-        <rename>Local</rename>
-        <type>None</type>
+        <name>Data</name>
+        <rename>dkTempo</rename>
+        <type>String</type>
         <length>-2</length>
         <precision>-2</precision>
         <conversion_mask/>
@@ -377,7 +686,7 @@
     <attributes/>
     <GUI>
       <xloc>800</xloc>
-      <yloc>144</yloc>
+      <yloc>576</yloc>
     </GUI>
   </transform>
   <transform>
@@ -391,61 +700,38 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <splitfield>Data</splitfield>
     <delimiter>.</delimiter>
-    <enclosure/>
-    <escape_string/>
     <fields>
       <field>
+        <idrem>N</idrem>
+        <length>-1</length>
         <name>Dia</name>
-        <id/>
-        <idrem>N</idrem>
-        <type>Integer</type>
-        <format/>
-        <group/>
-        <decimal/>
-        <currency/>
-        <length>-1</length>
         <precision>-1</precision>
-        <nullif/>
-        <ifnull/>
         <trimtype>none</trimtype>
+        <type>Integer</type>
       </field>
       <field>
+        <idrem>N</idrem>
+        <length>-1</length>
         <name>Mes</name>
-        <id/>
-        <idrem>N</idrem>
-        <type>Integer</type>
-        <format/>
-        <group/>
-        <decimal/>
-        <currency/>
-        <length>-1</length>
         <precision>-1</precision>
-        <nullif/>
-        <ifnull/>
         <trimtype>none</trimtype>
+        <type>Integer</type>
       </field>
       <field>
-        <name>Ano</name>
-        <id/>
         <idrem>N</idrem>
-        <type>Integer</type>
-        <format/>
-        <group/>
-        <decimal/>
-        <currency/>
         <length>-1</length>
+        <name>Ano</name>
         <precision>-1</precision>
-        <nullif/>
-        <ifnull/>
         <trimtype>none</trimtype>
+        <type>Integer</type>
       </field>
     </fields>
+    <splitfield>Data</splitfield>
     <attributes/>
     <GUI>
       <xloc>512</xloc>
-      <yloc>256</yloc>
+      <yloc>448</yloc>
     </GUI>
   </transform>
   <transform>
@@ -583,15 +869,51 @@
         <decimal/>
         <group/>
         <nullif/>
-        <trim_type>both</trim_type>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>lat</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>lon</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>pais</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
         <length>-1</length>
         <precision>-1</precision>
       </field>
     </fields>
     <attributes/>
     <GUI>
-      <xloc>928</xloc>
-      <yloc>144</yloc>
+      <xloc>848</xloc>
+      <yloc>304</yloc>
     </GUI>
   </transform>
   <transform>
@@ -673,6 +995,18 @@
         <precision>0</precision>
       </field>
       <field>
+        <name>DiaSemana</name>
+        <type>Integer</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>0</precision>
+      </field>
+      <field>
         <name>Mes</name>
         <type>Integer</type>
         <format/>
@@ -699,8 +1033,8 @@
     </fields>
     <attributes/>
     <GUI>
-      <xloc>784</xloc>
-      <yloc>336</yloc>
+      <xloc>944</xloc>
+      <yloc>576</yloc>
     </GUI>
   </transform>
   <transform>
@@ -1024,7 +1358,7 @@
         <repeat>N</repeat>
       </field>
     </fields>
-    <limit>0</limit>
+    <limit>20</limit>
     <error_ignored>N</error_ignored>
     <skip_bad_files>N</skip_bad_files>
     <file_error_field/>
@@ -1051,8 +1385,8 @@
     <sizeFieldName/>
     <attributes/>
     <GUI>
-      <xloc>656</xloc>
-      <yloc>144</yloc>
+      <xloc>96</xloc>
+      <yloc>304</yloc>
     </GUI>
   </transform>
   <transform>
@@ -1149,7 +1483,7 @@
     <attributes/>
     <GUI>
       <xloc>224</xloc>
-      <yloc>256</yloc>
+      <yloc>448</yloc>
     </GUI>
   </transform>
   <transform>
@@ -1364,72 +1698,6 @@
     <GUI>
       <xloc>96</xloc>
       <yloc>144</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>Merge join</name>
-    <type>MergeJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <join_type>INNER</join_type>
-    <keys_1>
-      <key>pkTempo</key>
-    </keys_1>
-    <keys_2>
-      <key>pkTempo</key>
-    </keys_2>
-    <transform1>Select values 3 2</transform1>
-    <transform2>Split fields</transform2>
-    <attributes/>
-    <GUI>
-      <xloc>512</xloc>
-      <yloc>336</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>Select values 4</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>Data</name>
-        <rename>dkTempo</rename>
-      </field>
-      <field>
-        <name>pkTempo</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Dia</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Mes</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Ano</name>
-        <rename/>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <attributes/>
-    <GUI>
-      <xloc>656</xloc>
-      <yloc>336</yloc>
     </GUI>
   </transform>
   <transform_error_handling>

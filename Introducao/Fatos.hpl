@@ -16,8 +16,6 @@
     <created_date>2023/03/13 08:09:48.230</created_date>
     <modified_user>-</modified_user>
     <modified_date>2023/03/13 08:09:48.230</modified_date>
-    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
-    <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
@@ -99,10 +97,78 @@
     </hop>
     <hop>
       <from>fkLocal_Destino</from>
-      <to>fatoPassagens</to>
+      <to>fatoPassagens_transacional</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>fkLocal_Destino</from>
+      <to>Sort rows</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Sort rows</from>
+      <to>Group by</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Group by</from>
+      <to>fatoPassagens_agregado</to>
       <enabled>Y</enabled>
     </hop>
   </order>
+  <transform>
+    <name>Group by</name>
+    <type>GroupBy</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <add_linenr>N</add_linenr>
+    <all_rows>N</all_rows>
+    <directory>${java.io.tmpdir}</directory>
+    <fields>
+      <field>
+        <aggregate>ValorPassagem</aggregate>
+        <subject>ValorPassagem</subject>
+        <type>SUM</type>
+      </field>
+    </fields>
+    <give_back_row>Y</give_back_row>
+    <group>
+      <field>
+        <name>fkUnidade</name>
+      </field>
+      <field>
+        <name>fkCargo</name>
+      </field>
+      <field>
+        <name>fkTipo</name>
+      </field>
+      <field>
+        <name>fkTempo_Inicio</name>
+      </field>
+      <field>
+        <name>fkTempo_Termino</name>
+      </field>
+      <field>
+        <name>fkLocal_Origem</name>
+      </field>
+      <field>
+        <name>fkLocal_Destino</name>
+      </field>
+    </group>
+    <ignore_aggregate>N</ignore_aggregate>
+    <prefix>grp</prefix>
+    <attributes/>
+    <GUI>
+      <xloc>416</xloc>
+      <yloc>608</yloc>
+    </GUI>
+  </transform>
   <transform>
     <name>Select values</name>
     <type>SelectValues</type>
@@ -117,83 +183,63 @@
     <fields>
       <field>
         <name>Empresa</name>
-        <rename/>
       </field>
       <field>
         <name>Unidade_organizacional</name>
-        <rename/>
       </field>
       <field>
         <name>Nome_do_Viajante</name>
-        <rename/>
       </field>
       <field>
         <name>Tipo_de_Viajante</name>
-        <rename/>
       </field>
       <field>
         <name>Subtipo_de_Viajante</name>
-        <rename/>
       </field>
       <field>
         <name>Cargo_Petrobras</name>
-        <rename/>
       </field>
       <field>
         <name>N�_Viagem</name>
-        <rename/>
       </field>
       <field>
         <name>Motivo_da_Viagem</name>
-        <rename/>
       </field>
       <field>
         <name>N�_Bilhete</name>
-        <rename/>
       </field>
       <field>
         <name>Origem_do_Voo</name>
-        <rename/>
       </field>
       <field>
         <name>Destino_do_Voo</name>
-        <rename/>
       </field>
       <field>
         <name>Dt.Inicio_Viagem</name>
-        <rename/>
       </field>
       <field>
         <name>Dt.Fim_Viagem</name>
-        <rename/>
       </field>
       <field>
         <name>Classe_de_Cabine</name>
-        <rename/>
       </field>
       <field>
         <name>Valor_de_Passagem_Aerea_(R$)</name>
-        <rename/>
       </field>
       <field>
         <name>Valor_de_Hospedagem_(R$)</name>
-        <rename/>
       </field>
       <field>
         <name>Quantidade_de_Dias_de_Hospedagem</name>
-        <rename/>
       </field>
       <field>
         <name>Despesas_com_Percursos_(R$)</name>
-        <rename/>
       </field>
       <field>
         <name>Despesas_com_Diarias_de_Viagem</name>
-        <rename/>
       </field>
       <field>
         <name>Valor_Total_da_Viagem</name>
-        <rename/>
       </field>
       <select_unspecified>N</select_unspecified>
       <meta>
@@ -217,12 +263,12 @@
     <attributes/>
     <GUI>
       <xloc>416</xloc>
-      <yloc>144</yloc>
+      <yloc>112</yloc>
     </GUI>
   </transform>
   <transform>
-    <name>fkUnidade</name>
-    <type>StreamLookup</type>
+    <name>Sort rows</name>
+    <type>SortRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -231,99 +277,75 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <from>dimUnidades</from>
-    <input_sorted>N</input_sorted>
-    <preserve_memory>Y</preserve_memory>
-    <sorted_list>N</sorted_list>
-    <integer_pair>N</integer_pair>
-    <lookup>
-      <key>
-        <name>Unidade_organizacional</name>
-        <field>Unidade</field>
-      </key>
-      <value>
-        <name>pkUnidade</name>
-        <rename>fkUnidade</rename>
-        <default/>
-        <type>Integer</type>
-      </value>
-    </lookup>
+    <directory>${java.io.tmpdir}</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>fkUnidade</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>fkCargo</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>fkTipo</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>fkTempo_Inicio</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>fkTempo_Termino</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>fkLocal_Origem</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>fkLocal_Destino</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
     <attributes/>
     <GUI>
-      <xloc>560</xloc>
-      <yloc>144</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>fkCargo</name>
-    <type>StreamLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <from>dimCargos</from>
-    <input_sorted>N</input_sorted>
-    <preserve_memory>Y</preserve_memory>
-    <sorted_list>N</sorted_list>
-    <integer_pair>N</integer_pair>
-    <lookup>
-      <key>
-        <name>Cargo_Petrobras</name>
-        <field>Cargo</field>
-      </key>
-      <value>
-        <name>pkCargo</name>
-        <rename>fkCargo</rename>
-        <default/>
-        <type>Integer</type>
-      </value>
-    </lookup>
-    <attributes/>
-    <GUI>
-      <xloc>688</xloc>
-      <yloc>144</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>fkTipo</name>
-    <type>StreamLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <from>dimTipos</from>
-    <input_sorted>N</input_sorted>
-    <preserve_memory>Y</preserve_memory>
-    <sorted_list>N</sorted_list>
-    <integer_pair>N</integer_pair>
-    <lookup>
-      <key>
-        <name>Tipo_de_Viajante</name>
-        <field>Tipo</field>
-      </key>
-      <key>
-        <name>Subtipo_de_Viajante</name>
-        <field>Subtipo</field>
-      </key>
-      <value>
-        <name>pkTipo</name>
-        <rename>fkTipo</rename>
-        <default/>
-        <type>Integer</type>
-      </value>
-    </lookup>
-    <attributes/>
-    <GUI>
-      <xloc>832</xloc>
-      <yloc>144</yloc>
+      <xloc>416</xloc>
+      <yloc>496</yloc>
     </GUI>
   </transform>
   <transform>
@@ -543,7 +565,7 @@
       </field>
       <field>
         <name>Dt.Inicio_Viagem</name>
-        <type>Date</type>
+        <type>String</type>
         <format>dd.MM.YYYY</format>
         <currency>$</currency>
         <decimal>,</decimal>
@@ -558,7 +580,7 @@
       </field>
       <field>
         <name>Dt.Fim_Viagem</name>
-        <type>Date</type>
+        <type>String</type>
         <format>dd.MM.YYYY</format>
         <currency>$</currency>
         <decimal>,</decimal>
@@ -588,16 +610,16 @@
       </field>
       <field>
         <name>Valor_de_Passagem_Aerea_(R$)</name>
-        <type>String</type>
-        <format>#.##0,00</format>
+        <type>Number</type>
+        <format>#,##0.00</format>
         <currency>$</currency>
         <decimal>,</decimal>
         <group>.</group>
         <nullif>-</nullif>
         <ifnull/>
         <position>-1</position>
-        <length>15</length>
-        <precision>2</precision>
+        <length>-1</length>
+        <precision>-1</precision>
         <trim_type>none</trim_type>
         <repeat>N</repeat>
       </field>
@@ -693,7 +715,7 @@
     <line_number_files_destination_directory/>
     <line_number_files_extension>line</line_number_files_extension>
     <date_format_lenient>Y</date_format_lenient>
-    <date_format_locale>en_US</date_format_locale>
+    <date_format_locale>pt_BR</date_format_locale>
     <shortFileFieldName/>
     <pathFieldName/>
     <hiddenFieldName/>
@@ -704,8 +726,8 @@
     <sizeFieldName/>
     <attributes/>
     <GUI>
-      <xloc>208</xloc>
-      <yloc>144</yloc>
+      <xloc>144</xloc>
+      <yloc>112</yloc>
     </GUI>
   </transform>
   <transform>
@@ -817,14 +839,14 @@
     <attributes/>
     <GUI>
       <xloc>688</xloc>
-      <yloc>32</yloc>
+      <yloc>0</yloc>
     </GUI>
   </transform>
   <transform>
-    <name>dimTipos</name>
+    <name>dimLocais</name>
     <type>TextFileInput2</type>
     <description/>
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution/>
     <copies>1</copies>
     <partitioning>
@@ -859,7 +881,7 @@
     <length>Characters</length>
     <add_to_result_filenames>Y</add_to_result_filenames>
     <file>
-      <name>${PROJECT_HOME}/dimTipos.csv</name>
+      <name>${PROJECT_HOME}/dimLocais.csv</name>
       <filemask/>
       <exclude_filemask/>
       <file_required>N</file_required>
@@ -871,7 +893,7 @@
     </filters>
     <fields>
       <field>
-        <name>pkTipo</name>
+        <name>pkLocal</name>
         <type>Integer</type>
         <format>#</format>
         <currency>$</currency>
@@ -886,7 +908,7 @@
         <repeat>N</repeat>
       </field>
       <field>
-        <name>Tipo</name>
+        <name>Local</name>
         <type>String</type>
         <format/>
         <currency>$</currency>
@@ -895,22 +917,7 @@
         <nullif>-</nullif>
         <ifnull/>
         <position>-1</position>
-        <length>9</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-        <repeat>N</repeat>
-      </field>
-      <field>
-        <name>Subtipo</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <nullif>-</nullif>
-        <ifnull/>
-        <position>-1</position>
-        <length>20</length>
+        <length>30</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
         <repeat>N</repeat>
@@ -943,299 +950,8 @@
     <sizeFieldName/>
     <attributes/>
     <GUI>
-      <xloc>832</xloc>
-      <yloc>32</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>dimUnidades</name>
-    <type>TextFileInput2</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <accept_filenames>N</accept_filenames>
-    <passing_through_fields>N</passing_through_fields>
-    <accept_field/>
-    <accept_transform_name/>
-    <separator>;</separator>
-    <enclosure>"</enclosure>
-    <enclosure_breaks>N</enclosure_breaks>
-    <escapechar/>
-    <header>Y</header>
-    <nr_headerlines>1</nr_headerlines>
-    <footer>N</footer>
-    <nr_footerlines>1</nr_footerlines>
-    <line_wrapped>N</line_wrapped>
-    <nr_wraps>1</nr_wraps>
-    <layout_paged>N</layout_paged>
-    <nr_lines_per_page>80</nr_lines_per_page>
-    <nr_lines_doc_header>0</nr_lines_doc_header>
-    <noempty>Y</noempty>
-    <include>N</include>
-    <include_field/>
-    <rownum>N</rownum>
-    <rownumByFile>N</rownumByFile>
-    <rownum_field/>
-    <format>DOS</format>
-    <encoding/>
-    <length>Characters</length>
-    <add_to_result_filenames>Y</add_to_result_filenames>
-    <file>
-      <name>${PROJECT_HOME}/dimUnidades.csv</name>
-      <filemask/>
-      <exclude_filemask/>
-      <file_required>N</file_required>
-      <include_subfolders>N</include_subfolders>
-      <type>CSV</type>
-      <compression>None</compression>
-    </file>
-    <filters>
-    </filters>
-    <fields>
-      <field>
-        <name>pkUnidade</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <nullif>-</nullif>
-        <ifnull/>
-        <position>-1</position>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-        <repeat>N</repeat>
-      </field>
-      <field>
-        <name>Unidade</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <nullif>-</nullif>
-        <ifnull/>
-        <position>-1</position>
-        <length>37</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-        <repeat>N</repeat>
-      </field>
-    </fields>
-    <limit>0</limit>
-    <error_ignored>N</error_ignored>
-    <skip_bad_files>N</skip_bad_files>
-    <file_error_field/>
-    <file_error_message_field/>
-    <error_line_skipped>N</error_line_skipped>
-    <error_count_field/>
-    <error_fields_field/>
-    <error_text_field/>
-    <bad_line_files_destination_directory/>
-    <bad_line_files_extension>warning</bad_line_files_extension>
-    <error_line_files_destination_directory/>
-    <error_line_files_extension>error</error_line_files_extension>
-    <line_number_files_destination_directory/>
-    <line_number_files_extension>line</line_number_files_extension>
-    <date_format_lenient>Y</date_format_lenient>
-    <date_format_locale>en_US</date_format_locale>
-    <shortFileFieldName/>
-    <pathFieldName/>
-    <hiddenFieldName/>
-    <lastModificationTimeFieldName/>
-    <uriNameFieldName/>
-    <rootUriNameFieldName/>
-    <extensionFieldName/>
-    <sizeFieldName/>
-    <attributes/>
-    <GUI>
-      <xloc>560</xloc>
-      <yloc>32</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>fatoPassagens</name>
-    <type>TextFileOutput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <separator>;</separator>
-    <enclosure>"</enclosure>
-    <enclosure_forced>N</enclosure_forced>
-    <enclosure_fix_disabled>N</enclosure_fix_disabled>
-    <header>Y</header>
-    <footer>N</footer>
-    <format>DOS</format>
-    <compression>None</compression>
-    <encoding>UTF-8</encoding>
-    <endedLine/>
-    <fileNameInField>N</fileNameInField>
-    <fileNameField/>
-    <create_parent_folder>Y</create_parent_folder>
-    <file>
-      <name>${PROJECT_HOME}/fatoPassagens</name>
-      <servlet_output>N</servlet_output>
-      <do_not_open_new_file_init>N</do_not_open_new_file_init>
-      <extention>csv</extention>
-      <append>N</append>
-      <split>N</split>
-      <haspartno>N</haspartno>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format/>
-      <add_to_result_filenames>Y</add_to_result_filenames>
-      <pad>N</pad>
-      <fast_dump>N</fast_dump>
-      <splitevery/>
-    </file>
-    <fields>
-      <field>
-        <name>fkUnidade</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>15</length>
-        <precision>0</precision>
-      </field>
-      <field>
-        <name>fkCargo</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>15</length>
-        <precision>0</precision>
-      </field>
-      <field>
-        <name>fkTipo</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>15</length>
-        <precision>0</precision>
-      </field>
-      <field>
-        <name>fkTempo_Inicio</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>15</length>
-        <precision>0</precision>
-      </field>
-      <field>
-        <name>fkTempo_Termino</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>15</length>
-        <precision>0</precision>
-      </field>
-      <field>
-        <name>fkLocal_Origem</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>15</length>
-        <precision>0</precision>
-      </field>
-      <field>
-        <name>fkLocal_Destino</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>15</length>
-        <precision>0</precision>
-      </field>
-      <field>
-        <name>ValorPassagem</name>
-        <type>Number</type>
-        <format>#,##0.00</format>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>15</length>
-        <precision>-1</precision>
-      </field>
-    </fields>
-    <attributes/>
-    <GUI>
-      <xloc>208</xloc>
-      <yloc>272</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>fkTempo_Inicio</name>
-    <type>StreamLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <from>dimTempo</from>
-    <input_sorted>N</input_sorted>
-    <preserve_memory>Y</preserve_memory>
-    <sorted_list>N</sorted_list>
-    <integer_pair>N</integer_pair>
-    <lookup>
-      <key>
-        <name>Dt.Inicio_Viagem</name>
-        <field>dkTempo</field>
-      </key>
-      <value>
-        <name>pkTempo</name>
-        <rename>fkTempo_Inicio</rename>
-        <default/>
-        <type>Integer</type>
-      </value>
-    </lookup>
-    <attributes/>
-    <GUI>
-      <xloc>832</xloc>
-      <yloc>272</yloc>
+      <xloc>496</xloc>
+      <yloc>384</yloc>
     </GUI>
   </transform>
   <transform>
@@ -1396,7 +1112,536 @@
     </GUI>
   </transform>
   <transform>
-    <name>fkTempo_Termino</name>
+    <name>dimTipos</name>
+    <type>TextFileInput2</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <accept_filenames>N</accept_filenames>
+    <passing_through_fields>N</passing_through_fields>
+    <accept_field/>
+    <accept_transform_name/>
+    <separator>;</separator>
+    <enclosure>"</enclosure>
+    <enclosure_breaks>N</enclosure_breaks>
+    <escapechar/>
+    <header>Y</header>
+    <nr_headerlines>1</nr_headerlines>
+    <footer>N</footer>
+    <nr_footerlines>1</nr_footerlines>
+    <line_wrapped>N</line_wrapped>
+    <nr_wraps>1</nr_wraps>
+    <layout_paged>N</layout_paged>
+    <nr_lines_per_page>80</nr_lines_per_page>
+    <nr_lines_doc_header>0</nr_lines_doc_header>
+    <noempty>Y</noempty>
+    <include>N</include>
+    <include_field/>
+    <rownum>N</rownum>
+    <rownumByFile>N</rownumByFile>
+    <rownum_field/>
+    <format>DOS</format>
+    <encoding/>
+    <length>Characters</length>
+    <add_to_result_filenames>Y</add_to_result_filenames>
+    <file>
+      <name>${PROJECT_HOME}/dimTipos.csv</name>
+      <filemask/>
+      <exclude_filemask/>
+      <file_required>N</file_required>
+      <include_subfolders>N</include_subfolders>
+      <type>CSV</type>
+      <compression>None</compression>
+    </file>
+    <filters>
+    </filters>
+    <fields>
+      <field>
+        <name>pkTipo</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif>-</nullif>
+        <ifnull/>
+        <position>-1</position>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
+      </field>
+      <field>
+        <name>Tipo</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif>-</nullif>
+        <ifnull/>
+        <position>-1</position>
+        <length>9</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
+      </field>
+      <field>
+        <name>Subtipo</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif>-</nullif>
+        <ifnull/>
+        <position>-1</position>
+        <length>20</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
+      </field>
+    </fields>
+    <limit>0</limit>
+    <error_ignored>N</error_ignored>
+    <skip_bad_files>N</skip_bad_files>
+    <file_error_field/>
+    <file_error_message_field/>
+    <error_line_skipped>N</error_line_skipped>
+    <error_count_field/>
+    <error_fields_field/>
+    <error_text_field/>
+    <bad_line_files_destination_directory/>
+    <bad_line_files_extension>warning</bad_line_files_extension>
+    <error_line_files_destination_directory/>
+    <error_line_files_extension>error</error_line_files_extension>
+    <line_number_files_destination_directory/>
+    <line_number_files_extension>line</line_number_files_extension>
+    <date_format_lenient>Y</date_format_lenient>
+    <date_format_locale>en_US</date_format_locale>
+    <shortFileFieldName/>
+    <pathFieldName/>
+    <hiddenFieldName/>
+    <lastModificationTimeFieldName/>
+    <uriNameFieldName/>
+    <rootUriNameFieldName/>
+    <extensionFieldName/>
+    <sizeFieldName/>
+    <attributes/>
+    <GUI>
+      <xloc>832</xloc>
+      <yloc>0</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>dimUnidades</name>
+    <type>TextFileInput2</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <accept_filenames>N</accept_filenames>
+    <passing_through_fields>N</passing_through_fields>
+    <accept_field/>
+    <accept_transform_name/>
+    <separator>;</separator>
+    <enclosure>"</enclosure>
+    <enclosure_breaks>N</enclosure_breaks>
+    <escapechar/>
+    <header>Y</header>
+    <nr_headerlines>1</nr_headerlines>
+    <footer>N</footer>
+    <nr_footerlines>1</nr_footerlines>
+    <line_wrapped>N</line_wrapped>
+    <nr_wraps>1</nr_wraps>
+    <layout_paged>N</layout_paged>
+    <nr_lines_per_page>80</nr_lines_per_page>
+    <nr_lines_doc_header>0</nr_lines_doc_header>
+    <noempty>Y</noempty>
+    <include>N</include>
+    <include_field/>
+    <rownum>N</rownum>
+    <rownumByFile>N</rownumByFile>
+    <rownum_field/>
+    <format>DOS</format>
+    <encoding/>
+    <length>Characters</length>
+    <add_to_result_filenames>Y</add_to_result_filenames>
+    <file>
+      <name>${PROJECT_HOME}/dimUnidades.csv</name>
+      <filemask/>
+      <exclude_filemask/>
+      <file_required>N</file_required>
+      <include_subfolders>N</include_subfolders>
+      <type>CSV</type>
+      <compression>None</compression>
+    </file>
+    <filters>
+    </filters>
+    <fields>
+      <field>
+        <name>pkUnidade</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif>-</nullif>
+        <ifnull/>
+        <position>-1</position>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
+      </field>
+      <field>
+        <name>Unidade</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif>-</nullif>
+        <ifnull/>
+        <position>-1</position>
+        <length>37</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
+      </field>
+    </fields>
+    <limit>0</limit>
+    <error_ignored>N</error_ignored>
+    <skip_bad_files>N</skip_bad_files>
+    <file_error_field/>
+    <file_error_message_field/>
+    <error_line_skipped>N</error_line_skipped>
+    <error_count_field/>
+    <error_fields_field/>
+    <error_text_field/>
+    <bad_line_files_destination_directory/>
+    <bad_line_files_extension>warning</bad_line_files_extension>
+    <error_line_files_destination_directory/>
+    <error_line_files_extension>error</error_line_files_extension>
+    <line_number_files_destination_directory/>
+    <line_number_files_extension>line</line_number_files_extension>
+    <date_format_lenient>Y</date_format_lenient>
+    <date_format_locale>en_US</date_format_locale>
+    <shortFileFieldName/>
+    <pathFieldName/>
+    <hiddenFieldName/>
+    <lastModificationTimeFieldName/>
+    <uriNameFieldName/>
+    <rootUriNameFieldName/>
+    <extensionFieldName/>
+    <sizeFieldName/>
+    <attributes/>
+    <GUI>
+      <xloc>560</xloc>
+      <yloc>0</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>fatoPassagens_agregado</name>
+    <type>TextFileOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <separator>;</separator>
+    <enclosure>"</enclosure>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>Y</header>
+    <footer>N</footer>
+    <format>DOS</format>
+    <compression>None</compression>
+    <encoding>windows-1252</encoding>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>${PROJECT_HOME}/fatoPassagens_psft</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention>csv</extention>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery/>
+    </file>
+    <fields>
+      <field>
+        <name>fkUnidade</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>fkCargo</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>fkTipo</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>fkTempo_Inicio</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>fkTempo_Termino</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>fkLocal_Origem</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>fkLocal_Destino</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>ValorPassagem</name>
+        <type>Number</type>
+        <format>#,##0.00</format>
+        <currency>$</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>-1</precision>
+      </field>
+    </fields>
+    <attributes/>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>608</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>fatoPassagens_transacional</name>
+    <type>TextFileOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <separator>;</separator>
+    <enclosure>"</enclosure>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>Y</header>
+    <footer>N</footer>
+    <format>DOS</format>
+    <compression>None</compression>
+    <encoding>windows-1252</encoding>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>${PROJECT_HOME}/fatoPassagens_tft</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention>csv</extention>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery/>
+    </file>
+    <fields>
+      <field>
+        <name>fkUnidade</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>fkCargo</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>fkTipo</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>fkTempo_Inicio</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>fkTempo_Termino</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>fkLocal_Origem</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>fkLocal_Destino</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>ValorPassagem</name>
+        <type>Number</type>
+        <format>#,##0.00</format>
+        <currency>$</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>-1</precision>
+      </field>
+    </fields>
+    <attributes/>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>272</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>fkCargo</name>
     <type>StreamLookup</type>
     <description/>
     <distribute>Y</distribute>
@@ -1406,26 +1651,60 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <from>dimTempo</from>
+    <from>dimCargos</from>
     <input_sorted>N</input_sorted>
     <preserve_memory>Y</preserve_memory>
     <sorted_list>N</sorted_list>
     <integer_pair>N</integer_pair>
     <lookup>
       <key>
-        <name>Dt.Fim_Viagem</name>
-        <field>dkTempo</field>
+        <name>Cargo_Petrobras</name>
+        <field>Cargo</field>
       </key>
       <value>
-        <name>pkTempo</name>
-        <rename>fkTempo_Termino</rename>
+        <name>pkCargo</name>
+        <rename>fkCargo</rename>
         <default/>
         <type>Integer</type>
       </value>
     </lookup>
     <attributes/>
     <GUI>
-      <xloc>704</xloc>
+      <xloc>688</xloc>
+      <yloc>112</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>fkLocal_Destino</name>
+    <type>StreamLookup</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <from>dimLocais</from>
+    <input_sorted>N</input_sorted>
+    <preserve_memory>Y</preserve_memory>
+    <sorted_list>N</sorted_list>
+    <integer_pair>N</integer_pair>
+    <lookup>
+      <key>
+        <name>Destino_do_Voo</name>
+        <field>Local</field>
+      </key>
+      <value>
+        <name>pkLocal</name>
+        <rename>fkLocal_Destino</rename>
+        <default/>
+        <type>Integer</type>
+      </value>
+    </lookup>
+    <attributes/>
+    <GUI>
+      <xloc>416</xloc>
       <yloc>272</yloc>
     </GUI>
   </transform>
@@ -1464,119 +1743,7 @@
     </GUI>
   </transform>
   <transform>
-    <name>dimLocais</name>
-    <type>TextFileInput2</type>
-    <description/>
-    <distribute>N</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <accept_filenames>N</accept_filenames>
-    <passing_through_fields>N</passing_through_fields>
-    <accept_field/>
-    <accept_transform_name/>
-    <separator>;</separator>
-    <enclosure>"</enclosure>
-    <enclosure_breaks>N</enclosure_breaks>
-    <escapechar/>
-    <header>Y</header>
-    <nr_headerlines>1</nr_headerlines>
-    <footer>N</footer>
-    <nr_footerlines>1</nr_footerlines>
-    <line_wrapped>N</line_wrapped>
-    <nr_wraps>1</nr_wraps>
-    <layout_paged>N</layout_paged>
-    <nr_lines_per_page>80</nr_lines_per_page>
-    <nr_lines_doc_header>0</nr_lines_doc_header>
-    <noempty>Y</noempty>
-    <include>N</include>
-    <include_field/>
-    <rownum>N</rownum>
-    <rownumByFile>N</rownumByFile>
-    <rownum_field/>
-    <format>DOS</format>
-    <encoding/>
-    <length>Characters</length>
-    <add_to_result_filenames>Y</add_to_result_filenames>
-    <file>
-      <name>${PROJECT_HOME}/dimLocais.csv</name>
-      <filemask/>
-      <exclude_filemask/>
-      <file_required>N</file_required>
-      <include_subfolders>N</include_subfolders>
-      <type>CSV</type>
-      <compression>None</compression>
-    </file>
-    <filters>
-    </filters>
-    <fields>
-      <field>
-        <name>pkLocal</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <nullif>-</nullif>
-        <ifnull/>
-        <position>-1</position>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-        <repeat>N</repeat>
-      </field>
-      <field>
-        <name>Local</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <nullif>-</nullif>
-        <ifnull/>
-        <position>-1</position>
-        <length>30</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-        <repeat>N</repeat>
-      </field>
-    </fields>
-    <limit>0</limit>
-    <error_ignored>N</error_ignored>
-    <skip_bad_files>N</skip_bad_files>
-    <file_error_field/>
-    <file_error_message_field/>
-    <error_line_skipped>N</error_line_skipped>
-    <error_count_field/>
-    <error_fields_field/>
-    <error_text_field/>
-    <bad_line_files_destination_directory/>
-    <bad_line_files_extension>warning</bad_line_files_extension>
-    <error_line_files_destination_directory/>
-    <error_line_files_extension>error</error_line_files_extension>
-    <line_number_files_destination_directory/>
-    <line_number_files_extension>line</line_number_files_extension>
-    <date_format_lenient>Y</date_format_lenient>
-    <date_format_locale>en_US</date_format_locale>
-    <shortFileFieldName/>
-    <pathFieldName/>
-    <hiddenFieldName/>
-    <lastModificationTimeFieldName/>
-    <uriNameFieldName/>
-    <rootUriNameFieldName/>
-    <extensionFieldName/>
-    <sizeFieldName/>
-    <attributes/>
-    <GUI>
-      <xloc>496</xloc>
-      <yloc>384</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>fkLocal_Destino</name>
+    <name>fkTempo_Inicio</name>
     <type>StreamLookup</type>
     <description/>
     <distribute>Y</distribute>
@@ -1586,27 +1753,133 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <from>dimLocais</from>
+    <from>dimTempo</from>
     <input_sorted>N</input_sorted>
     <preserve_memory>Y</preserve_memory>
     <sorted_list>N</sorted_list>
     <integer_pair>N</integer_pair>
     <lookup>
       <key>
-        <name>Destino_do_Voo</name>
-        <field>Local</field>
+        <name>Dt.Inicio_Viagem</name>
+        <field>dkTempo</field>
       </key>
       <value>
-        <name>pkLocal</name>
-        <rename>fkLocal_Destino</rename>
+        <name>pkTempo</name>
+        <rename>fkTempo_Inicio</rename>
         <default/>
         <type>Integer</type>
       </value>
     </lookup>
     <attributes/>
     <GUI>
-      <xloc>416</xloc>
+      <xloc>832</xloc>
       <yloc>272</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>fkTempo_Termino</name>
+    <type>StreamLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <from>dimTempo</from>
+    <input_sorted>N</input_sorted>
+    <preserve_memory>Y</preserve_memory>
+    <sorted_list>N</sorted_list>
+    <integer_pair>N</integer_pair>
+    <lookup>
+      <key>
+        <name>Dt.Fim_Viagem</name>
+        <field>dkTempo</field>
+      </key>
+      <value>
+        <name>pkTempo</name>
+        <rename>fkTempo_Termino</rename>
+        <default/>
+        <type>Integer</type>
+      </value>
+    </lookup>
+    <attributes/>
+    <GUI>
+      <xloc>704</xloc>
+      <yloc>272</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>fkTipo</name>
+    <type>StreamLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <from>dimTipos</from>
+    <input_sorted>N</input_sorted>
+    <preserve_memory>Y</preserve_memory>
+    <sorted_list>N</sorted_list>
+    <integer_pair>N</integer_pair>
+    <lookup>
+      <key>
+        <name>Tipo_de_Viajante</name>
+        <field>Tipo</field>
+      </key>
+      <key>
+        <name>Subtipo_de_Viajante</name>
+        <field>Subtipo</field>
+      </key>
+      <value>
+        <name>pkTipo</name>
+        <rename>fkTipo</rename>
+        <default/>
+        <type>Integer</type>
+      </value>
+    </lookup>
+    <attributes/>
+    <GUI>
+      <xloc>832</xloc>
+      <yloc>112</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>fkUnidade</name>
+    <type>StreamLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <from>dimUnidades</from>
+    <input_sorted>N</input_sorted>
+    <preserve_memory>Y</preserve_memory>
+    <sorted_list>N</sorted_list>
+    <integer_pair>N</integer_pair>
+    <lookup>
+      <key>
+        <name>Unidade_organizacional</name>
+        <field>Unidade</field>
+      </key>
+      <value>
+        <name>pkUnidade</name>
+        <rename>fkUnidade</rename>
+        <default/>
+        <type>Integer</type>
+      </value>
+    </lookup>
+    <attributes/>
+    <GUI>
+      <xloc>560</xloc>
+      <yloc>112</yloc>
     </GUI>
   </transform>
   <transform_error_handling>
