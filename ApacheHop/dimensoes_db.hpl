@@ -256,23 +256,6 @@ pais = desc != null ? desc.split(",").slice(-1) : ""
     <fields>
       <select_unspecified>N</select_unspecified>
       <meta>
-        <name>pkLocal</name>
-        <rename>pkLocal</rename>
-        <type>None</type>
-        <length>10</length>
-        <precision>0</precision>
-        <conversion_mask/>
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale/>
-        <date_format_timezone/>
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding/>
-        <decimal_symbol/>
-        <grouping_symbol/>
-        <currency_symbol/>
-        <storage_type/>
-      </meta>
-      <meta>
         <name>Local</name>
         <rename>Local</rename>
         <type>None</type>
@@ -315,23 +298,6 @@ pais = desc != null ? desc.split(",").slice(-1) : ""
         <type>String</type>
         <length>-2</length>
         <precision>-2</precision>
-        <conversion_mask/>
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale/>
-        <date_format_timezone/>
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding/>
-        <decimal_symbol/>
-        <grouping_symbol/>
-        <currency_symbol/>
-        <storage_type/>
-      </meta>
-      <meta>
-        <name>pkCargo</name>
-        <rename>pkCargo</rename>
-        <type>Integer</type>
-        <length>10</length>
-        <precision>0</precision>
         <conversion_mask/>
         <date_format_lenient>false</date_format_lenient>
         <date_format_locale/>
@@ -397,23 +363,6 @@ pais = desc != null ? desc.split(",").slice(-1) : ""
         <currency_symbol/>
         <storage_type/>
       </meta>
-      <meta>
-        <name>pkTipo</name>
-        <rename>pkTipo</rename>
-        <type>None</type>
-        <length>10</length>
-        <precision>0</precision>
-        <conversion_mask/>
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale/>
-        <date_format_timezone/>
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding/>
-        <decimal_symbol/>
-        <grouping_symbol/>
-        <currency_symbol/>
-        <storage_type/>
-      </meta>
     </fields>
     <attributes/>
     <GUI>
@@ -440,23 +389,6 @@ pais = desc != null ? desc.split(",").slice(-1) : ""
         <type>None</type>
         <length>-2</length>
         <precision>-2</precision>
-        <conversion_mask/>
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale/>
-        <date_format_timezone/>
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding/>
-        <decimal_symbol/>
-        <grouping_symbol/>
-        <currency_symbol/>
-        <storage_type/>
-      </meta>
-      <meta>
-        <name>pkUnidade</name>
-        <rename>pkUnidade</rename>
-        <type>None</type>
-        <length>10</length>
-        <precision>0</precision>
         <conversion_mask/>
         <date_format_lenient>false</date_format_lenient>
         <date_format_locale/>
@@ -518,6 +450,151 @@ pais = desc != null ? desc.split(",").slice(-1) : ""
     </GUI>
   </transform>
   <transform>
+    <name>dimLocais</name>
+    <type>DimensionLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <cache_size>5000</cache_size>
+    <commit>100</commit>
+    <connection>dw_petro</connection>
+    <fields>
+      <date>
+        <from>date_from</from>
+        <to>date_to</to>
+      </date>
+      <field>
+        <lookup>lat</lookup>
+        <name>lat</name>
+        <update>Insert</update>
+      </field>
+      <field>
+        <lookup>lon</lookup>
+        <name>lon</name>
+        <update>Insert</update>
+      </field>
+      <field>
+        <lookup>pais</lookup>
+        <name>pais</name>
+        <update>Insert</update>
+      </field>
+      <key>
+        <lookup>Local</lookup>
+        <name>Local</name>
+      </key>
+      <return>
+        <creation_method>tablemax</creation_method>
+        <name>pkLocal</name>
+        <version>version</version>
+      </return>
+    </fields>
+    <max_year>2199</max_year>
+    <min_year>1900</min_year>
+    <preload_cache>N</preload_cache>
+    <table>dimLocais</table>
+    <update>Y</update>
+    <useBatch>N</useBatch>
+    <use_start_date_alternative>N</use_start_date_alternative>
+    <attributes/>
+    <GUI>
+      <xloc>864</xloc>
+      <yloc>304</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>dimTipos</name>
+    <type>DimensionLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <cache_size>5000</cache_size>
+    <commit>100</commit>
+    <connection>dw_petro</connection>
+    <fields>
+      <date>
+        <from>date_from</from>
+        <to>date_to</to>
+      </date>
+      <key>
+        <lookup>Tipo</lookup>
+        <name>Tipo</name>
+      </key>
+      <key>
+        <lookup>Subtipo</lookup>
+        <name>Subtipo</name>
+      </key>
+      <return>
+        <creation_method>tablemax</creation_method>
+        <name>pkTipo</name>
+        <version>version</version>
+      </return>
+    </fields>
+    <max_year>2199</max_year>
+    <min_year>1900</min_year>
+    <preload_cache>N</preload_cache>
+    <table>dimTipos</table>
+    <update>Y</update>
+    <useBatch>N</useBatch>
+    <use_start_date_alternative>N</use_start_date_alternative>
+    <attributes/>
+    <GUI>
+      <xloc>944</xloc>
+      <yloc>48</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>dimUnidades</name>
+    <type>DimensionLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <cache_size>5000</cache_size>
+    <commit>100</commit>
+    <connection>dw_petro</connection>
+    <fields>
+      <date>
+        <from>date_from</from>
+        <to>date_to</to>
+      </date>
+      <key>
+        <lookup>Unidade</lookup>
+        <name>Unidade</name>
+      </key>
+      <return>
+        <creation_method>tablemax</creation_method>
+        <name>pkUnidade</name>
+        <version>version</version>
+      </return>
+    </fields>
+    <max_year>2199</max_year>
+    <min_year>1900</min_year>
+    <preload_cache>N</preload_cache>
+    <table>dimUnidades</table>
+    <update>Y</update>
+    <useBatch>N</useBatch>
+    <use_start_date_alternative>N</use_start_date_alternative>
+    <attributes/>
+    <GUI>
+      <xloc>400</xloc>
+      <yloc>192</yloc>
+    </GUI>
+  </transform>
+  <transform>
     <name>dsCargos</name>
     <type>TableInput</type>
     <description/>
@@ -539,155 +616,6 @@ FROM "public".dscargos
     <attributes/>
     <GUI>
       <xloc>112</xloc>
-      <yloc>48</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>dsUnidades</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>dw_petro</connection>
-    <execute_each_row>N</execute_each_row>
-    <limit>0</limit>
-    <sql>SELECT
-  unidade_organizacional
-FROM "public".dsunidades
-</sql>
-    <variables_active>N</variables_active>
-    <attributes/>
-    <GUI>
-      <xloc>96</xloc>
-      <yloc>192</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>dimUnidades</name>
-    <type>DimensionLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <cache_size>5000</cache_size>
-    <commit>100</commit>
-    <connection>dw_petro</connection>
-    <fields>
-      <date>
-        <from>date_from</from>
-        <name/>
-        <to>date_to</to>
-      </date>
-      <key>
-        <lookup>Unidade</lookup>
-        <name>Unidade</name>
-      </key>
-      <return>
-        <creation_method>tablemax</creation_method>
-        <name>pkUnidade</name>
-        <rename/>
-        <version>version</version>
-      </return>
-    </fields>
-    <max_year>2199</max_year>
-    <min_year>1900</min_year>
-    <preload_cache>N</preload_cache>
-    <schema/>
-    <sequence/>
-    <start_date_field_name/>
-    <table>dimUnidades</table>
-    <update>Y</update>
-    <useBatch>N</useBatch>
-    <use_start_date_alternative>N</use_start_date_alternative>
-    <attributes/>
-    <GUI>
-      <xloc>400</xloc>
-      <yloc>192</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>dsTipos</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>dw_petro</connection>
-    <execute_each_row>N</execute_each_row>
-    <limit>0</limit>
-    <sql>SELECT
-  tipo_de_viajante
-, subtipo_de_viajante
-FROM "public".dstipos
-</sql>
-    <variables_active>N</variables_active>
-    <attributes/>
-    <GUI>
-      <xloc>672</xloc>
-      <yloc>48</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>dimTipos</name>
-    <type>DimensionLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <cache_size>5000</cache_size>
-    <commit>100</commit>
-    <connection>dw_petro</connection>
-    <fields>
-      <date>
-        <from>date_from</from>
-        <name/>
-        <to>date_to</to>
-      </date>
-      <key>
-        <lookup>Tipo</lookup>
-        <name>Tipo</name>
-      </key>
-      <key>
-        <lookup>Subtipo</lookup>
-        <name>Subtipo</name>
-      </key>
-      <return>
-        <creation_method>tablemax</creation_method>
-        <name>pkCargo</name>
-        <rename/>
-        <version>version</version>
-      </return>
-    </fields>
-    <max_year>2199</max_year>
-    <min_year>1900</min_year>
-    <preload_cache>N</preload_cache>
-    <schema/>
-    <sequence/>
-    <start_date_field_name/>
-    <table>dimTipos</table>
-    <update>Y</update>
-    <useBatch>N</useBatch>
-    <use_start_date_alternative>N</use_start_date_alternative>
-    <attributes/>
-    <GUI>
-      <xloc>944</xloc>
       <yloc>48</yloc>
     </GUI>
   </transform>
@@ -717,8 +645,8 @@ FROM "public".dslocais
     </GUI>
   </transform>
   <transform>
-    <name>dimLocais</name>
-    <type>DimensionLookup</type>
+    <name>dsTipos</name>
+    <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -727,55 +655,44 @@ FROM "public".dslocais
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <cache_size>5000</cache_size>
-    <commit>100</commit>
     <connection>dw_petro</connection>
-    <fields>
-      <date>
-        <from>date_from</from>
-        <name/>
-        <to>date_to</to>
-      </date>
-      <field>
-        <lookup>lat</lookup>
-        <name>lat</name>
-        <update>Insert</update>
-      </field>
-      <field>
-        <lookup>lon</lookup>
-        <name>lon</name>
-        <update>Insert</update>
-      </field>
-      <field>
-        <lookup>pais</lookup>
-        <name>pais</name>
-        <update>Insert</update>
-      </field>
-      <key>
-        <lookup>Local</lookup>
-        <name>Local</name>
-      </key>
-      <return>
-        <creation_method>tablemax</creation_method>
-        <name>pkLocal</name>
-        <rename/>
-        <version>version</version>
-      </return>
-    </fields>
-    <max_year>2199</max_year>
-    <min_year>1900</min_year>
-    <preload_cache>N</preload_cache>
-    <schema/>
-    <sequence/>
-    <start_date_field_name/>
-    <table>dimLocais</table>
-    <update>Y</update>
-    <useBatch>N</useBatch>
-    <use_start_date_alternative>N</use_start_date_alternative>
+    <execute_each_row>N</execute_each_row>
+    <limit>0</limit>
+    <sql>SELECT
+  tipo_de_viajante
+, subtipo_de_viajante
+FROM "public".dstipos
+</sql>
+    <variables_active>N</variables_active>
     <attributes/>
     <GUI>
-      <xloc>864</xloc>
-      <yloc>304</yloc>
+      <xloc>672</xloc>
+      <yloc>48</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>dsUnidades</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>dw_petro</connection>
+    <execute_each_row>N</execute_each_row>
+    <limit>0</limit>
+    <sql>SELECT
+  unidade_organizacional
+FROM "public".dsunidades
+</sql>
+    <variables_active>N</variables_active>
+    <attributes/>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>192</yloc>
     </GUI>
   </transform>
   <transform_error_handling>
