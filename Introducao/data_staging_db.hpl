@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pipeline>
   <info>
-    <name>data_staging</name>
+    <name>data_staging_db</name>
     <name_sync_with_filename>Y</name_sync_with_filename>
     <description/>
     <extended_description/>
@@ -36,11 +36,6 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Unique rows</from>
-      <to>dsUnidades</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Text file input - Arquivos de Dados</from>
       <to>Select Cargo_Petrobras</to>
       <enabled>Y</enabled>
@@ -48,11 +43,6 @@
     <hop>
       <from>Select Cargo_Petrobras</from>
       <to>Unique rows (HashSet)</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Unique rows (HashSet)</from>
-      <to>dsCargos</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -66,11 +56,6 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Unique rows (HashSet) 2</from>
-      <to>dsTipos</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Text file input - Arquivos de Dados</from>
       <to>Dt.Inicio_Viagem</to>
       <enabled>Y</enabled>
@@ -78,11 +63,6 @@
     <hop>
       <from>Text file input - Arquivos de Dados</from>
       <to>Select Dt.Fim_Viagem</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Unique Data</from>
-      <to>dsTempo</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -143,6 +123,26 @@
     <hop>
       <from>Append streams 2</from>
       <to>Unique Local</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Unique rows</from>
+      <to>dsUnidades</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Unique rows (HashSet)</from>
+      <to>dsCargos</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Unique rows (HashSet) 2</from>
+      <to>dsTipos</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Unique Data</from>
+      <to>dsTempo</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -1054,7 +1054,7 @@
     </fields>
     <attributes/>
     <GUI>
-      <xloc>528</xloc>
+      <xloc>560</xloc>
       <yloc>176</yloc>
     </GUI>
   </transform>
@@ -1088,7 +1088,7 @@
   </transform>
   <transform>
     <name>dsCargos</name>
-    <type>TextFileOutput</type>
+    <type>InsertUpdate</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1097,50 +1097,23 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <separator>;</separator>
-    <enclosure>"</enclosure>
-    <enclosure_forced>N</enclosure_forced>
-    <enclosure_fix_disabled>N</enclosure_fix_disabled>
-    <header>Y</header>
-    <footer>N</footer>
-    <format>DOS</format>
-    <compression>None</compression>
-    <encoding>UTF-8</encoding>
-    <endedLine/>
-    <fileNameInField>N</fileNameInField>
-    <fileNameField/>
-    <create_parent_folder>Y</create_parent_folder>
-    <file>
-      <name>${PROJECT_HOME}/dsCargos</name>
-      <servlet_output>N</servlet_output>
-      <do_not_open_new_file_init>N</do_not_open_new_file_init>
-      <extention>csv</extention>
-      <append>N</append>
-      <split>N</split>
-      <haspartno>N</haspartno>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format/>
-      <add_to_result_filenames>Y</add_to_result_filenames>
-      <pad>N</pad>
-      <fast_dump>N</fast_dump>
-      <splitevery/>
-    </file>
-    <fields>
-      <field>
+    <commit>100</commit>
+    <connection>dw_petro</connection>
+    <lookup>
+      <key>
+        <condition>=</condition>
+        <field>Cargo_Petrobras</field>
         <name>Cargo_Petrobras</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-    </fields>
+      </key>
+      <schema/>
+      <table>dsCargos</table>
+      <value>
+        <name>Cargo_Petrobras</name>
+        <rename>Cargo_Petrobras</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <update_bypassed>N</update_bypassed>
     <attributes/>
     <GUI>
       <xloc>752</xloc>
@@ -1148,69 +1121,8 @@
     </GUI>
   </transform>
   <transform>
-    <name>dsLocais</name>
-    <type>TextFileOutput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <separator>;</separator>
-    <enclosure>"</enclosure>
-    <enclosure_forced>N</enclosure_forced>
-    <enclosure_fix_disabled>N</enclosure_fix_disabled>
-    <header>Y</header>
-    <footer>N</footer>
-    <format>DOS</format>
-    <compression>None</compression>
-    <encoding>UTF-8</encoding>
-    <endedLine/>
-    <fileNameInField>N</fileNameInField>
-    <fileNameField/>
-    <create_parent_folder>Y</create_parent_folder>
-    <file>
-      <name>${PROJECT_HOME}/dsLocais</name>
-      <servlet_output>N</servlet_output>
-      <do_not_open_new_file_init>N</do_not_open_new_file_init>
-      <extention>csv</extention>
-      <append>N</append>
-      <split>N</split>
-      <haspartno>N</haspartno>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format/>
-      <add_to_result_filenames>Y</add_to_result_filenames>
-      <pad>N</pad>
-      <fast_dump>N</fast_dump>
-      <splitevery/>
-    </file>
-    <fields>
-      <field>
-        <name>Local</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-    </fields>
-    <attributes/>
-    <GUI>
-      <xloc>944</xloc>
-      <yloc>592</yloc>
-    </GUI>
-  </transform>
-  <transform>
     <name>dsTempo</name>
-    <type>TextFileOutput</type>
+    <type>InsertUpdate</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1219,59 +1131,32 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <separator>;</separator>
-    <enclosure>"</enclosure>
-    <enclosure_forced>N</enclosure_forced>
-    <enclosure_fix_disabled>N</enclosure_fix_disabled>
-    <header>Y</header>
-    <footer>N</footer>
-    <format>DOS</format>
-    <compression>None</compression>
-    <encoding>UTF-8</encoding>
-    <endedLine/>
-    <fileNameInField>N</fileNameInField>
-    <fileNameField/>
-    <create_parent_folder>Y</create_parent_folder>
-    <file>
-      <name>${PROJECT_HOME}/dsTempo</name>
-      <servlet_output>N</servlet_output>
-      <do_not_open_new_file_init>N</do_not_open_new_file_init>
-      <extention>csv</extention>
-      <append>N</append>
-      <split>N</split>
-      <haspartno>N</haspartno>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format/>
-      <add_to_result_filenames>Y</add_to_result_filenames>
-      <pad>N</pad>
-      <fast_dump>N</fast_dump>
-      <splitevery/>
-    </file>
-    <fields>
-      <field>
+    <commit>100</commit>
+    <connection>dw_petro</connection>
+    <lookup>
+      <key>
+        <condition>=</condition>
+        <field>Data</field>
         <name>Data</name>
-        <type>String</type>
-        <format>dd.MM.YYYY</format>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>15</length>
-        <precision>2</precision>
-      </field>
-    </fields>
+      </key>
+      <schema/>
+      <table>dsTempo</table>
+      <value>
+        <name>Data</name>
+        <rename>Data</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <update_bypassed>N</update_bypassed>
     <attributes/>
     <GUI>
-      <xloc>944</xloc>
+      <xloc>928</xloc>
       <yloc>400</yloc>
     </GUI>
   </transform>
   <transform>
     <name>dsTipos</name>
-    <type>TextFileOutput</type>
+    <type>InsertUpdate</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1280,71 +1165,42 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <separator>;</separator>
-    <enclosure>"</enclosure>
-    <enclosure_forced>N</enclosure_forced>
-    <enclosure_fix_disabled>N</enclosure_fix_disabled>
-    <header>Y</header>
-    <footer>N</footer>
-    <format>DOS</format>
-    <compression>None</compression>
-    <encoding>UTF-8</encoding>
-    <endedLine/>
-    <fileNameInField>N</fileNameInField>
-    <fileNameField/>
-    <create_parent_folder>Y</create_parent_folder>
-    <file>
-      <name>${PROJECT_HOME}/dsTipos</name>
-      <servlet_output>N</servlet_output>
-      <do_not_open_new_file_init>N</do_not_open_new_file_init>
-      <extention>csv</extention>
-      <append>N</append>
-      <split>N</split>
-      <haspartno>N</haspartno>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format/>
-      <add_to_result_filenames>Y</add_to_result_filenames>
-      <pad>N</pad>
-      <fast_dump>N</fast_dump>
-      <splitevery/>
-    </file>
-    <fields>
-      <field>
+    <commit>100</commit>
+    <connection>dw_petro</connection>
+    <lookup>
+      <key>
+        <condition>=</condition>
+        <field>Tipo_de_Viajante</field>
         <name>Tipo_de_Viajante</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
+      </key>
+      <key>
+        <condition>=</condition>
+        <field>Subtipo_de_Viajante</field>
         <name>Subtipo_de_Viajante</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-    </fields>
+      </key>
+      <schema/>
+      <table>dsTipos</table>
+      <value>
+        <name>Tipo_de_Viajante</name>
+        <rename>Tipo_de_Viajante</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Subtipo_de_Viajante</name>
+        <rename>Subtipo_de_Viajante</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <update_bypassed>N</update_bypassed>
     <attributes/>
     <GUI>
-      <xloc>752</xloc>
+      <xloc>736</xloc>
       <yloc>272</yloc>
     </GUI>
   </transform>
   <transform>
     <name>dsUnidades</name>
-    <type>TextFileOutput</type>
+    <type>InsertUpdate</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1353,54 +1209,62 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <separator>;</separator>
-    <enclosure>"</enclosure>
-    <enclosure_forced>N</enclosure_forced>
-    <enclosure_fix_disabled>N</enclosure_fix_disabled>
-    <header>Y</header>
-    <footer>N</footer>
-    <format>DOS</format>
-    <compression>None</compression>
-    <encoding>windows-1252</encoding>
-    <endedLine/>
-    <fileNameInField>N</fileNameInField>
-    <fileNameField/>
-    <create_parent_folder>Y</create_parent_folder>
-    <file>
-      <name>${PROJECT_HOME}/dsUnidades</name>
-      <servlet_output>N</servlet_output>
-      <do_not_open_new_file_init>N</do_not_open_new_file_init>
-      <extention>csv</extention>
-      <append>N</append>
-      <split>N</split>
-      <haspartno>N</haspartno>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format/>
-      <add_to_result_filenames>Y</add_to_result_filenames>
-      <pad>N</pad>
-      <fast_dump>N</fast_dump>
-      <splitevery/>
-    </file>
-    <fields>
-      <field>
+    <commit>100</commit>
+    <connection>dw_petro</connection>
+    <lookup>
+      <key>
+        <condition>=</condition>
+        <field>Unidade_organizacional</field>
         <name>Unidade_organizacional</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-    </fields>
+      </key>
+      <schema/>
+      <table>dsUnidades</table>
+      <value>
+        <name>Unidade_organizacional</name>
+        <rename>Unidade_organizacional</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <update_bypassed>N</update_bypassed>
     <attributes/>
     <GUI>
       <xloc>752</xloc>
       <yloc>64</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>dsLocais</name>
+    <type>InsertUpdate</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <commit>100</commit>
+    <connection>dw_petro</connection>
+    <lookup>
+      <key>
+        <condition>=</condition>
+        <field>Local</field>
+        <name>Local</name>
+        <name2/>
+      </key>
+      <schema/>
+      <table>dsLocais</table>
+      <value>
+        <name>Local</name>
+        <rename>Local</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <update_bypassed>N</update_bypassed>
+    <attributes/>
+    <GUI>
+      <xloc>960</xloc>
+      <yloc>592</yloc>
     </GUI>
   </transform>
   <transform_error_handling>
