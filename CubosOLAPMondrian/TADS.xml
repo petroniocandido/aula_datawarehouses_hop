@@ -1,0 +1,122 @@
+<Schema name="TADS" measuresCaption="Medidas">
+  <Dimension type="TimeDimension" visible="true" highCardinality="false" name="Tempo">
+    <Hierarchy name="New Hierarchy 0" visible="true" hasAll="true" allMemberName="Todos" allMemberCaption="Todos" allLevelName="Todos" primaryKey="ID">
+      <Table name="dimtempo">
+      </Table>
+      <Level name="Mes" visible="true" column="MONTH_SK" type="Integer" uniqueMembers="false" levelType="TimeMonths" hideMemberIf="Never">
+      </Level>
+      <Level name="Ano" visible="true" column="YEAR_SK" type="Integer" internalType="int" uniqueMembers="false" levelType="TimeYears" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" highCardinality="false" name="Respondente">
+    <Hierarchy name="New Hierarchy 0" visible="true" hasAll="true" allMemberName="Todos" allMemberCaption="Todos" allLevelName="Todos" primaryKey="pkRespondente">
+      <Table name="dimrespondente">
+      </Table>
+      <Level name="Sexo" visible="true" column="SEXO" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="AnoIngresso" visible="true" column="ANOINGRESSO" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" highCardinality="false" name="Cidades">
+    <Hierarchy name="Cidade" visible="true" hasAll="true" primaryKey="pkCidade">
+      <Table name="dimcidades">
+      </Table>
+      <Level name="Estado" visible="true" column="CODIGO_UF" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="Micro Regi&#227;o" visible="true" column="NOMEMICRO" ordinalColumn="CODMICRO" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="Cidade" visible="true" column="NOME_2" ordinalColumn="CODIGO_MUN" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" highCardinality="false" name="Ensino M&#233;dio">
+    <Hierarchy name="Ensino M&#233;dio" visible="true" hasAll="true" primaryKey="pkEnsinoMedio">
+      <Table name="dimensinomedio">
+      </Table>
+      <Level name="Ensino M&#233;dio" visible="true" column="ENSINOMEDIO" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" highCardinality="false" name="Curso T&#233;cnico">
+    <Hierarchy name="Curso T&#233;cnico" visible="true" hasAll="true">
+      <Table name="dimcursotecnico">
+      </Table>
+      <Level name="Curso T&#233;cnico" visible="true" column="CURSOTECNICO" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" name="Situa&#231;&#227;o Curso">
+    <Hierarchy name="Situa&#231;&#227;o Curso" visible="true" hasAll="true">
+      <Table name="dimsituacaocurso" alias="">
+      </Table>
+      <Level name="Situa&#231;&#227;o Curso" visible="true" column="SITUACAOATUAL" uniqueMembers="false">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" name="Per&#237;odo">
+    <Hierarchy name="Per&#237;odo" visible="true" hasAll="true" primaryKey="pkPeriodo">
+      <Table name="dimperiodo" alias="">
+      </Table>
+      <Level name="Per&#237;odo" visible="true" column="PERIODO" uniqueMembers="false" levelType="Regular">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Cube name="Avaliacoes" visible="true" cache="true" enabled="true">
+    <Table name="fatoavaliacoes">
+    </Table>
+    <DimensionUsage source="Tempo" name="Ano Ingresso" visible="true" foreignKey="PKANOINGRESSO" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="Respondente" name="Respondente" visible="true" foreignKey="PKRESPONDENTE" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="Tempo" name="Ano Conclus&#227;o" visible="true" foreignKey="pkAnoConclusao" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="Tempo" name="Nascimento" visible="true" foreignKey="pkDataNascimento" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="Cidades" name="Cidade Origem" visible="true" foreignKey="pkCidadeOrigem" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="Cidades" name="Cidade Atual" visible="true" foreignKey="pkCidadeAtual" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="Ensino M&#233;dio" name="Ensino M&#233;dio" visible="true" foreignKey="pkEnsinoMedio" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="Curso T&#233;cnico" name="Curso T&#233;cnico" visible="true" foreignKey="pkCursoTecnico" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="Situa&#231;&#227;o Curso" name="Situa&#231;&#227;o Curso" visible="true" foreignKey="pkSituacaoCurso">
+    </DimensionUsage>
+    <Measure name="Auto Avalia&#231;&#227;o" column="AVAL_AUTOAVALIACAO" datatype="Numeric" aggregator="distinct count" visible="true">
+    </Measure>
+    <Measure name="Processo de Avalia&#231;&#227;o " column="AVAL_AVALIACAO" aggregator="distinct-count" visible="true">
+    </Measure>
+    <Measure name="Processo de Est&#225;gio" column="AVAL_AVALIACAOESTAGIO" aggregator="distinct-count" visible="true">
+    </Measure>
+    <Measure name="Processo de TCC" column="AVAL_AVALIACAOTCC" aggregator="distinct-count" visible="true">
+    </Measure>
+    <Measure name="Biblioteca" column="AVAL_BIBLIOTECA" aggregator="distinct-count" visible="true">
+    </Measure>
+    <Measure name="Coordena&#231;&#227;o" column="AVAL_COORDENACAO" aggregator="distinct-count" visible="true">
+    </Measure>
+    <Measure name="Corpo Docente" column="AVAL_CORPODOCENTE" aggregator="distinct-count" visible="true">
+    </Measure>
+    <Measure name="Empregabilidade" column="AVAL_EMPREGABILIDADE" aggregator="distinct-count" visible="true">
+    </Measure>
+    <Measure name="Infraestrutura TADS" column="AVAL_INFRAESTRUTRURATADS" aggregator="distinct-count" visible="true">
+    </Measure>
+    <Measure name="Infraestrutura IFM&#60;G" column="AVAL_INFRAESTRUTURAIFNMG" aggregator="distinct-count" visible="true">
+    </Measure>
+    <Measure name="Ordem Disciplinas" column="AVAL_ORDEMDISCIPLINAS" aggregator="distinct-count" visible="true">
+    </Measure>
+    <Measure name="Orienta&#231;&#227;o TCC" column="AVAL_ORIENTACAOTCC" aggregator="distinct-count" visible="true">
+    </Measure>
+    <Measure name="Qualidade do Curso" column="AVAL_QUALIDADECURSO" aggregator="distinct-count" visible="true">
+    </Measure>
+    <Measure name="Qualidade Grade" column="AVAL_QUALIDADEGRADE" aggregator="distinct-count" visible="true">
+    </Measure>
+    <Measure name="Relacionamento Docente/Discente" column="AVAL_RELACIONAMENTODOCENTE" aggregator="distinct-count" visible="true">
+    </Measure>
+    <Measure name="Reputa&#231;&#227;o IFNMG" column="AVAL_REPUTACAOIFNMG" aggregator="distinct-count" visible="true">
+    </Measure>
+    <Measure name="Reputa&#231;&#227;o TADS" column="CONTRIBUICAOTADS" aggregator="distinct-count" visible="true">
+    </Measure>
+  </Cube>
+</Schema>

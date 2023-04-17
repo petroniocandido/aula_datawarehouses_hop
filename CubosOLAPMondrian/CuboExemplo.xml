@@ -1,0 +1,64 @@
+<Schema name="Vendas">
+  <Cube name="Produtos Vendidos" visible="true" description="Cada produto de uma nota fiscal" cache="true" enabled="true">
+    <Table name="ft_notafiscal_produto">
+    </Table>
+    <Dimension type="StandardDimension" visible="true" foreignKey="SK_dimCliente" highCardinality="false" name="Cliente">
+      <Hierarchy name="Cliente" visible="true" hasAll="true" primaryKey="SK_dimCliente">
+        <Table name="dim_cliente">
+        </Table>
+        <Level name="Cliente" visible="true" column="cliente_id" nameColumn="dsNome" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" visible="true" foreignKey="SK_dimVendedor" highCardinality="false" name="Vendedor">
+      <Hierarchy name="Vendedor" visible="true" hasAll="true" primaryKey="SK_dimVendedor">
+        <Table name="dim_vendedor">
+        </Table>
+        <Level name="Filial" visible="true" column="filial_id" nameColumn="dsFilial" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Vendedor" visible="true" column="vendedor_id" nameColumn="dsVendedor" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" visible="true" foreignKey="SK_dimNotafiscal" highCardinality="false" name="NotaFiscal" description="Nota Fiscal">
+      <Hierarchy name="NotaFiscal" visible="true" hasAll="true" primaryKey="SK_dimNotafiscal" description="Nota Fiscal">
+        <Table name="dim_notafiscal">
+        </Table>
+        <Level name="NotaFiscal" visible="true" column="notafiscal_id" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never" description="Nota Fiscal">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" visible="true" foreignKey="SK_dimProduto" highCardinality="false" name="Produto">
+      <Hierarchy name="Produto" visible="true" hasAll="true" primaryKey="SK_dimProduto">
+        <Table name="dim_produto">
+        </Table>
+        <Level name="Categoria" visible="true" column="produtocategoria_id" nameColumn="dsProdutoCategoria" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Produto" visible="true" column="produto_id" nameColumn="dsProduto" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="TimeDimension" visible="true" foreignKey="SK_dimData" highCardinality="false" name="Data">
+      <Hierarchy name="Data" visible="true" hasAll="true" primaryKey="SK_dimData">
+        <Table name="dim_data">
+        </Table>
+        <Level name="Ano" visible="true" column="dsAno" type="String" uniqueMembers="false" levelType="TimeYears" hideMemberIf="Never">
+        </Level>
+        <Level name="Trimestre" visible="true" column="nrTrimestre" nameColumn="dsTrimestre" type="String" uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="Never">
+        </Level>
+        <Level name="Mes" visible="true" column="nrMes" nameColumn="dsMes" type="Numeric" uniqueMembers="false" levelType="TimeMonths" hideMemberIf="Never" description="M&#234;s">
+        </Level>
+        <Level name="Dia" visible="true" column="dtData" type="Date" uniqueMembers="false" levelType="TimeDays" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Measure name="Quantidade" column="qtProduto" datatype="Integer" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="Valor Compra" column="vlCompra" datatype="Numeric" aggregator="sum" description="Valor de compra" visible="true">
+    </Measure>
+    <Measure name="Valor Venda" column="vlVenda" datatype="Numeric" aggregator="sum" visible="true">
+    </Measure>
+    <CalculatedMember name="Valor Lucro" formula="[Measures].[Valor Venda] - [Measures].[Valor Compra]" dimension="Measures" visible="true">
+    </CalculatedMember>
+  </Cube>
+</Schema>
